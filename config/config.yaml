@@ -44,11 +44,37 @@ rss:
     max_age_days: 1
 
   feeds:
-    # 1. 海外顶级英文源
+    # ==========================================
+    # 1. 科技、创业与编程 (Awesome & Bing)
+    # ==========================================
+    - id: "bing-tech-programming"
+      name: "Bing新闻-科技与编程"
+      url: "https://www.bing.com/news/search?q=科技+编程&format=RSS"
+      max_age_days: 2
+    - id: "techcrunch"
+      name: "TechCrunch"
+      url: "http://feeds.feedburner.com/TechCrunch"
+      max_age_days: 2
+    - id: "v2ex-hot"
+      name: "V2EX-最热主题"
+      url: "https://www.v2ex.com/index.xml"
+      max_age_days: 2
+    - id: "infoq-cn"
+      name: "InfoQ-架构与编程"
+      url: "https://rsshub.rssforever.com/infoq/recommend"
+      max_age_days: 2
+    - id: "ruanyifeng"
+      name: "阮一峰的网络日志"
+      url: "http://www.ruanyifeng.com/blog/atom.xml"
+      max_age_days: 2
     - id: "hacker-news"
       name: "Hacker News"
       url: "https://hnrss.org/frontpage"
       max_age_days: 2
+
+    # ==========================================
+    # 2. 海外顶级英文源
+    # ==========================================
     - id: "yahoo-finance"
       name: "Yahoo Finance"
       url: "https://finance.yahoo.com/news/rssindex"
@@ -58,7 +84,9 @@ rss:
       url: "https://rsshub.rssforever.com/reuters/technology"
       max_age_days: 2
 
-    # 2. 权威财经与快讯
+    # ==========================================
+    # 3. 权威财经与快讯
+    # ==========================================
     - id: "cls-telegraph"
       name: "财联社-电报"
       url: "https://rsshub.rssforever.com/cls/telegraph"
@@ -72,7 +100,9 @@ rss:
       url: "https://rsshub.rssforever.com/jiemian/lists/8"
       max_age_days: 2
 
-    # 3. 顶尖深度商业
+    # ==========================================
+    # 4. 顶尖深度商业
+    # ==========================================
     - id: "latepost"
       name: "晚点LatePost"
       url: "https://rsshub.rssforever.com/latepost/index"
@@ -86,7 +116,9 @@ rss:
       url: "https://rsshub.rssforever.com/eeo/17"
       max_age_days: 2
 
-    # 4. 汽车行业权威垂直媒体
+    # ==========================================
+    # 5. 汽车行业权威垂直媒体
+    # ==========================================
     - id: "gasgoo"
       name: "盖世汽车"
       url: "https://rsshub.rssforever.com/gasgoo/news"
@@ -104,7 +136,9 @@ rss:
       url: "https://rsshub.rssforever.com/wallstreetcn/news/global"
       max_age_days: 2
 
-    # 5. 硬核前沿科技
+    # ==========================================
+    # 6. 硬核前沿科技
+    # ==========================================
     - id: "jiqizhixin"
       name: "机器之心"
       url: "https://rsshub.rssforever.com/jiqizhixin/latest"
@@ -114,7 +148,9 @@ rss:
       url: "https://rsshub.rssforever.com/leiphone/category/auto"
       max_age_days: 2
 
-    # 6. 新能源纯垂直媒体
+    # ==========================================
+    # 7. 新能源纯垂直媒体
+    # ==========================================
     - id: "cheyun"
       name: "车云网"
       url: "https://rsshub.rssforever.com/cheyun/index"
@@ -128,7 +164,9 @@ rss:
       url: "https://rsshub.rssforever.com/d1ev/news"
       max_age_days: 2
 
-    # 7. 储能、电池与新能源材料
+    # ==========================================
+    # 8. 储能、电池与新能源材料
+    # ==========================================
     - id: "bjx-chuneng"
       name: "北极星储能网"
       url: "https://rsshub.rssforever.com/bjx/chuneng/yw"
