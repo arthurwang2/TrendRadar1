@@ -1,41 +1,219 @@
-# ═══════════════════════════════════════════════════════════════
-#                    TrendRadar 频率词配置文件 (全量枚举版)
-# ═══════════════════════════════════════════════════════════════
-
 [WORD_GROUPS]
 
-# 1. 比亚迪系 (覆盖全品牌、全系车型、技术名词)
-/比亚迪|BYD|方程豹|腾势|仰望|弗迪|王传福|云辇|易四方|刀片电池|海鸥|海豚|驱逐舰|豹5|豹8|秦PLUS|汉DM|唐DM|宋PLUS/ => 🇨🇳 比亚迪系动态
+[🇨🇳 比亚迪系动态]
+比亚迪
+BYD
+Build Your Dreams
+方程豹
+腾势
+仰望
+弗迪
+王传福
+刀片电池
+Blade Battery
+云辇
+易四方
+海鸥
+海豚
+驱逐舰
+豹5
+豹8
 
-# 2. 小米汽车 (覆盖品牌、高管、车型、代号)
-/小米汽车|小米造车|SU7|雷军|卢伟冰|小米SU7/ => 🇨🇳 小米汽车动态
+[🇨🇳 小米汽车动态]
+小米汽车
+小米造车
+Xiaomi EV
+Xiaomi Auto
+SU7
+雷军
+Lei Jun
+卢伟冰
 
-# 3. 华为汽车生态 (覆盖所有界、技术、高管)
-/华为汽车|鸿蒙智行|问界|智界|享界|尊界|赛力斯|江淮|奇瑞|北汽|余承东|华为智驾|乾崑|AITO|M5|M7|M9|S7|S9/ => 🇨🇳 华为系动态
+[🇨🇳 华为系动态]
+华为汽车
+Huawei Auto
+鸿蒙智行
+HarmonyOS
+问界
+AITO
+智界
+享界
+尊界
+赛力斯
+Seres
+江淮
+奇瑞
+北汽
+余承东
+华为智驾
+乾崑
 
-# 4. 理想汽车
-/理想汽车|李想|理想L6|理想L7|理想L8|理想L9|理想MEGA|理想销量|理想交付|理想智驾/ => 🇨🇳 理想汽车动态
+[🇨🇳 理想汽车动态]
+理想汽车
+Li Auto
+李想
+Li Xiang
+理想L6
+理想L7
+理想L8
+理想L9
+理想MEGA
+理想销量
+理想交付
 
-# 5. 小鹏汽车 (覆盖车型、代号、飞行汽车)
-/小鹏|何小鹏|XPEV|MONA|M03|小鹏P7|小鹏G6|小鹏G9|小鹏X9|小鹏汇天|飞行汽车/ => 🇨🇳 小鹏汽车动态
+[🇨🇳 小鹏汽车动态]
+小鹏
+Xpeng
+何小鹏
+He Xiaopeng
+XPEV
+MONA
+飞行汽车
+AeroHT
+小鹏P7
+小鹏G6
+小鹏G9
+小鹏X9
 
-# 6. 蔚来汽车 (覆盖子品牌、换电业务、全系车型)
-/蔚来|李斌|NIO|乐道|萤火虫|蔚来换电|ET5|ET7|ES6|ES8|EC6|BaaS/ => 🇨🇳 蔚来汽车动态
+[🇨🇳 蔚来汽车动态]
+蔚来
+NIO
+李斌
+William Li
+乐道
+ONVO
+萤火虫
+蔚来换电
+Nio Power
+BaaS
+ET5
+ET7
+ES6
+ES8
 
-# 7. 特斯拉 (中英文、全系车型、核心技术)
-/特斯拉|马斯克|Tesla|Musk|TSLA|Model 3|Model Y|Model S|Model X|Cybertruck|FSD|FSD入华|Robotaxi/ => 🇺🇸 特斯拉动态
+[🇺🇸 特斯拉动态]
+特斯拉
+Tesla
+马斯克
+Elon Musk
+Musk
+TSLA
+Cybertruck
+FSD
+Full Self-Driving
+Robotaxi
+Gigafactory
 
-# 8. 其他所有国产新能源玩家 (一网打尽)
-/极氪|安聪慧|零跑|朱江明|吉利新能源|极越|领克|长安启源|深蓝汽车|阿维塔|广汽埃安|昊铂|智己|飞凡|蔚小理|造车新势力|新能源车|电动车|纯电|插混|增程/ => 🇨🇳 其他新能源玩家
+[🇨🇳 其他新能源玩家]
+极氪
+Zeekr
+安聪慧
+零跑
+Leapmotor
+朱江明
+吉利
+Geely
+极越
+领克
+长安
+深蓝
+阿维塔
+广汽
+上汽
+智己
+造车新势力
+新能源车
+NEV
+电动车
+EV
+Electric Vehicle
+纯电
+BEV
+插混
+PHEV
+增程
+EREV
 
-# 9. 核心供应链 (电池、芯片、行业协会)
-/宁德时代|曾毓群|CATL|麒麟电池|神行电池|地平线|Momenta|乘联会|中汽协|碳酸锂|汽车芯片|算力芯片|自动驾驶芯片|黑芝麻智能/ => 🇨🇳 核心供应链
+[🇨🇳 核心供应链]
+宁德时代
+CATL
+曾毓群
+麒麟电池
+神行电池
+地平线
+Horizon Robotics
+Momenta
+乘联会
+CPCA
+中汽协
+碳酸锂
+Lithium
+汽车芯片
+Auto Chip
+算力芯片
+AI Chip
+自动驾驶芯片
 
-# 10. 储能与补能生态
-/Megapack|储能|固态电池|半固态电池|动力电池|Supercharger|超级充电|液冷超充|800V|充电桩|换电站|V2G/ => 🔋 储能与补能生态
+[🔋 储能与补能生态]
+Megapack
+储能
+Energy Storage
+固态电池
+Solid-state Battery
+半固态电池
+动力电池
+EV Battery
+Supercharger
+超级充电
+液冷超充
+800V
+充电桩
+Charging Station
+换电站
+Battery Swapping
+V2G
 
-# 11. 智驾与机器人 (前沿科技)
-/机器人|具身智能|Optimus|擎天柱|智驾|自动驾驶|无人驾驶|车路云|激光雷达|毫米波雷达|纯视觉|端到端|萝卜快跑/ => 🤖 智驾与机器人
+[🤖 智驾与机器人]
+机器人
+Robot
+人形机器人
+Humanoid
+具身智能
+Embodied AI
+Optimus
+擎天柱
+智驾
+自动驾驶
+Autonomous Driving
+无人驾驶
+Self-Driving
+ADAS
+车路云
+V2X
+激光雷达
+LiDAR
+毫米波雷达
+纯视觉
+Pure Vision
+端到端
+End-to-End
+萝卜快跑
+Apollo Go
+Waymo
 
-# 12. 产业宏观与制造
-/智能制造|工厂自动化|汽车产线|一体化压铸|汽车出海|汽车关税|反补贴|车企价格战/ => 🏭 产业与出海宏观
+[🏭 产业与出海宏观]
+智能制造
+Smart Manufacturing
+工厂自动化
+Factory Automation
+汽车产线
+一体化压铸
+Gigacasting
+汽车出海
+EV Export
+汽车关税
+EV Tariff
+反补贴
+Anti-subsidy
+车企价格战
+Price War
