@@ -8,11 +8,11 @@ app:
   show_version_update: true
 
 schedule:
-  enabled: false                        # 修复了拼写错误
+  enabled: false
   preset: "morning_evening"
 
 platforms:
-  enabled: true                         # 开启热榜匹配
+  enabled: true
   sources:
     - id: "toutiao"
       name: "今日头条"
@@ -44,7 +44,25 @@ rss:
     max_age_days: 1
 
   feeds:
-    # 权威财经与快讯
+    # ==========================================
+    # 1. 海外顶级英文源 (宏观、科技与前沿)
+    # ==========================================
+    - id: "hacker-news"
+      name: "Hacker News"
+      url: "https://hnrss.org/frontpage"
+      max_age_days: 2
+    - id: "yahoo-finance"
+      name: "Yahoo Finance"
+      url: "https://finance.yahoo.com/news/rssindex"
+      max_age_days: 2
+    - id: "reuters-tech"
+      name: "Reuters Technology"
+      url: "https://rsshub.app/reuters/technology"
+      max_age_days: 2
+
+    # ==========================================
+    # 2. 权威财经与快讯
+    # ==========================================
     - id: "cls-telegraph"
       name: "财联社-电报"
       url: "https://rsshub.app/cls/telegraph"
@@ -58,41 +76,9 @@ rss:
       url: "https://rsshub.app/jiemian/lists/8"
       max_age_days: 2
 
-    # 传统门户汽车/财经频道
-    - id: "sina-auto"
-      name: "新浪汽车"
-      url: "https://rsshub.app/sina/roll/auto"
-      max_age_days: 2
-    - id: "sina-finance"
-      name: "新浪财经"
-      url: "https://rsshub.app/sina/finance/auto"
-      max_age_days: 2
-
-    # 汽车行业权威垂直媒体
-    - id: "gasgoo"
-      name: "盖世汽车"
-      url: "https://rsshub.app/gasgoo/news"
-      max_age_days: 2
-    - id: "autohome"
-      name: "汽车之家-行业"
-      url: "https://rsshub.app/autohome/news/all"
-      max_age_days: 2
-
-    # 头部商业与科技媒体
-    - id: "36kr"
-      name: "36氪"
-      url: "https://36kr.com/feed"
-      max_age_days: 2
-    - id: "tmtpost"
-      name: "钛媒体"
-      url: "https://rsshub.app/tmtpost/default"
-      max_age_days: 2
-    - id: "wallstreetcn"
-      name: "华尔街见闻"
-      url: "https://rsshub.app/wallstreetcn/news/global"
-      max_age_days: 2
-
-    # 顶尖深度商业
+    # ==========================================
+    # 3. 顶尖深度商业 (独家内幕与战略)
+    # ==========================================
     - id: "latepost"
       name: "晚点LatePost"
       url: "https://rsshub.app/latepost/index"
@@ -106,7 +92,29 @@ rss:
       url: "https://rsshub.app/eeo/17"
       max_age_days: 2
 
-    # 硬核前沿科技
+    # ==========================================
+    # 4. 汽车行业权威垂直媒体
+    # ==========================================
+    - id: "gasgoo"
+      name: "盖世汽车"
+      url: "https://rsshub.app/gasgoo/news"
+      max_age_days: 2
+    - id: "autohome"
+      name: "汽车之家-行业"
+      url: "https://rsshub.app/autohome/news/all"
+      max_age_days: 2
+    - id: "36kr"
+      name: "36氪"
+      url: "https://36kr.com/feed"
+      max_age_days: 2
+    - id: "wallstreetcn"
+      name: "华尔街见闻"
+      url: "https://rsshub.app/wallstreetcn/news/global"
+      max_age_days: 2
+
+    # ==========================================
+    # 5. 硬核前沿科技 (AI、智驾、机器人)
+    # ==========================================
     - id: "jiqizhixin"
       name: "机器之心"
       url: "https://rsshub.app/jiqizhixin/latest"
@@ -116,7 +124,9 @@ rss:
       url: "https://rsshub.app/leiphone/category/auto"
       max_age_days: 2
 
-    # 新能源纯垂直媒体
+    # ==========================================
+    # 6. 新能源纯垂直媒体
+    # ==========================================
     - id: "cheyun"
       name: "车云网"
       url: "https://rsshub.app/cheyun/index"
@@ -130,7 +140,9 @@ rss:
       url: "https://rsshub.app/d1ev/news"
       max_age_days: 2
 
-    # 储能、电池与新能源材料
+    # ==========================================
+    # 7. 储能、电池与新能源材料
+    # ==========================================
     - id: "bjx-chuneng"
       name: "北极星储能网"
       url: "https://rsshub.app/bjx/chuneng/yw"
@@ -153,7 +165,7 @@ rss:
       max_age_days: 2
 
 report:
-  mode: "daily"                       # 使用全天汇总模式，积累丰富新闻
+  mode: "daily"
   display_mode: "keyword"
   sort_by_position_first: true
   rank_threshold: 5
@@ -183,7 +195,7 @@ display:
     new_items: false
     hotlist: true
     rss: true
-    standalone: false                 # 彻底关闭独立展示区，防止垃圾新闻
+    standalone: false
     ai_analysis: false
   standalone:
     platforms: []
