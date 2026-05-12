@@ -45,31 +45,35 @@ rss:
 
   feeds:
     # ==========================================
-    # 1. 科技、创业与编程 (官方直连)
+    # 1. 微软 Bing 官方定制源 (极度稳定，不报503)
     # ==========================================
-    - id: "bing-tech-programming"
-      name: "Bing新闻-科技与编程"
-      url: "https://www.bing.com/news/search?q=科技+编程&format=RSS"
+    - id: "bing-ev"
+      name: "Bing新闻-新能源与车企"
+      url: "https://www.bing.com/news/search?q=新能源汽车+造车新势力&format=RSS"
+      max_age_days: 2
+    - id: "bing-battery"
+      name: "Bing新闻-电池与储能"
+      url: "https://www.bing.com/news/search?q=固态电池+动力电池+储能&format=RSS"
+      max_age_days: 2
+    - id: "bing-ai"
+      name: "Bing新闻-AI大方向"
+      url: "https://www.bing.com/news/search?q=人工智能+大模型&format=RSS"
+      max_age_days: 2
+    - id: "bing-finance"
+      name: "Bing新闻-宏观与财经"
+      url: "https://www.bing.com/news/search?q=宏观经济+美联储+A股&format=RSS"
+      max_age_days: 2
+
+    # ==========================================
+    # 2. 官方直连权威商业/科技源 (100% 成功率)
+    # ==========================================
+    - id: "yahoo-finance"
+      name: "Yahoo Finance"
+      url: "https://finance.yahoo.com/news/rssindex"
       max_age_days: 2
     - id: "techcrunch"
       name: "TechCrunch"
       url: "http://feeds.feedburner.com/TechCrunch"
-      max_age_days: 2
-    - id: "v2ex-hot"
-      name: "V2EX-最热主题"
-      url: "https://www.v2ex.com/index.xml"
-      max_age_days: 2
-    - id: "ruanyifeng"
-      name: "阮一峰的网络日志"
-      url: "http://www.ruanyifeng.com/blog/atom.xml"
-      max_age_days: 2
-    - id: "hacker-news"
-      name: "Hacker News"
-      url: "https://hnrss.org/frontpage"
-      max_age_days: 2
-    - id: "yahoo-finance"
-      name: "Yahoo Finance"
-      url: "https://finance.yahoo.com/news/rssindex"
       max_age_days: 2
     - id: "36kr"
       name: "36氪"
@@ -77,99 +81,19 @@ rss:
       max_age_days: 2
 
     # ==========================================
-    # 2. 节点 A 分流 (rss.shab.fun)
+    # 3. 备用高可用 RSSHub 节点 (精选核心汽车与财经)
     # ==========================================
-    - id: "cls-telegraph"
-      name: "财联社-电报"
-      url: "https://rss.shab.fun/cls/telegraph"
-      max_age_days: 2
-    - id: "latepost"
-      name: "晚点LatePost"
-      url: "https://rss.shab.fun/latepost/index"
-      max_age_days: 2
-    - id: "gasgoo"
-      name: "盖世汽车"
-      url: "https://rss.shab.fun/gasgoo/news"
-      max_age_days: 2
-    - id: "jiqizhixin"
-      name: "机器之心"
-      url: "https://rss.shab.fun/jiqizhixin/latest"
-      max_age_days: 2
-    - id: "evhui"
-      name: "电车汇"
-      url: "https://rss.shab.fun/evhui/news"
-      max_age_days: 2
-    - id: "thepaper-energy"
-      name: "澎湃新闻-能源与双碳"
-      url: "https://rss.shab.fun/thepaper/channel/25953"
-      max_age_days: 2
-    - id: "36kr-energy"
-      name: "36氪-新能源与双碳"
-      url: "https://rss.shab.fun/36kr/motif/32768"
-      max_age_days: 2
-
-    # ==========================================
-    # 3. 节点 B 分流 (rss.mxd.cx)
-    # ==========================================
-    - id: "yicai"
-      name: "第一财经"
-      url: "https://rss.mxd.cx/yicai/latest"
-      max_age_days: 2
-    - id: "caixin-latest"
-      name: "财新网-最新"
-      url: "https://rss.mxd.cx/caixin/latest"
-      max_age_days: 2
-    - id: "autohome"
-      name: "汽车之家-行业"
-      url: "https://rss.mxd.cx/autohome/news/all"
-      max_age_days: 2
-    - id: "leiphone-auto"
-      name: "雷锋网-智能驾驶"
-      url: "https://rss.mxd.cx/leiphone/category/auto"
-      max_age_days: 2
-    - id: "d1ev"
-      name: "第一电动网"
-      url: "https://rss.mxd.cx/d1ev/news"
-      max_age_days: 2
-    - id: "jiemian-energy"
-      name: "界面新闻-新能源"
-      url: "https://rss.mxd.cx/jiemian/lists/84"
-      max_age_days: 2
-    - id: "reuters-tech"
-      name: "Reuters Technology"
-      url: "https://rss.mxd.cx/reuters/technology"
-      max_age_days: 2
-
-    # ==========================================
-    # 4. 节点 C 分流 (rsshub.111566.xyz)
-    # ==========================================
-    - id: "jiemian"
-      name: "界面新闻"
-      url: "https://rsshub.111566.xyz/jiemian/lists/8"
-      max_age_days: 2
-    - id: "eeo-auto"
-      name: "经济观察网-汽车频道"
-      url: "https://rsshub.111566.xyz/eeo/17"
-      max_age_days: 2
     - id: "wallstreetcn"
       name: "华尔街见闻"
       url: "https://rsshub.111566.xyz/wallstreetcn/news/global"
       max_age_days: 2
-    - id: "cheyun"
-      name: "车云网"
-      url: "https://rsshub.111566.xyz/cheyun/index"
+    - id: "cls-telegraph"
+      name: "财联社-电报"
+      url: "https://rsshub.111566.xyz/cls/telegraph"
       max_age_days: 2
-    - id: "bjx-chuneng"
-      name: "北极星储能网"
-      url: "https://rsshub.111566.xyz/bjx/chuneng/yw"
-      max_age_days: 2
-    - id: "cls-energy"
-      name: "财联社-新能源深度"
-      url: "https://rsshub.111566.xyz/cls/depth/1003"
-      max_age_days: 2
-    - id: "infoq-cn"
-      name: "InfoQ-架构与编程"
-      url: "https://rsshub.111566.xyz/infoq/recommend"
+    - id: "autohome"
+      name: "汽车之家-行业"
+      url: "https://rsshub.111566.xyz/autohome/news/all"
       max_age_days: 2
 
 report:
@@ -194,7 +118,7 @@ ai_filter:
 
 display:
   region_order:
-    - ai_analysis                     # 将 AI 分析提到了最前面
+    - ai_analysis                     
     - new_items
     - hotlist
     - rss
@@ -204,7 +128,7 @@ display:
     hotlist: true
     rss: true
     standalone: false
-    ai_analysis: true                 # 开启 AI 分析显示区域
+    ai_analysis: true                 
   standalone:
     platforms: []
     rss_feeds: []
@@ -262,8 +186,8 @@ storage:
     days: 7
 
 ai:
-  model: "Qwen/Qwen2.5-7B-Instruct"
-  api_key: ""                       # 💡 Taiwei，请将你的 DeepSeek 或 OpenAI API Key 填在双引号内，例如 "sk-xxxxxx"
+  model: "openai/Qwen/Qwen2.5-7B-Instruct"
+  api_key: ""                       
   api_base: "https://api.siliconflow.cn/v1"
   timeout: 120
   temperature: 1.0
