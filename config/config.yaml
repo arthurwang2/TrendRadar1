@@ -96,7 +96,7 @@ rss:
       max_age_days: 2
 
 report:
-  mode: "current"
+  mode: "daily"
   display_mode: "keyword"
   sort_by_position_first: false
   rank_threshold: 5
