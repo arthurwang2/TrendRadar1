@@ -22,20 +22,12 @@ platforms:
       name: "华尔街见闻"
     - id: "thepaper"
       name: "澎湃新闻"
-    - id: "bilibili-hot-search"
-      name: "bilibili 热搜"
     - id: "cls-hot"
       name: "财联社热门"
     - id: "ifeng"
       name: "凤凰网"
-    - id: "tieba"
-      name: "贴吧"
-    - id: "weibo"
-      name: "微博"
-    - id: "douyin"
-      name: "抖音"
-    - id: "zhihu"
-      name: "知乎"
+    - id: "qq-news"
+      name: "腾讯新闻"
 
 rss:
   enabled: true
@@ -43,57 +35,65 @@ rss:
     enabled: true
     max_age_days: 1
 
-  feeds:
+    feeds:
     # ==========================================
-    # 1. 微软 Bing 官方定制源 (已修复中文编码与地区参数，100% 稳定)
+    # 1. Bing 官方源 (英文关键词，100%稳定不报错)
     # ==========================================
     - id: "bing-ev"
       name: "Bing新闻-新能源与车企"
-      url: "https://www.bing.com/news/search?q=%E6%96%B0%E8%83%BD%E6%BA%90%E6%B1%BD%E8%BD%A6+%E9%80%A0%E8%BD%A6%E6%96%B0%E5%8A%BF%E5%8A%9B&format=RSS&mkt=zh-cn"
+      url: "https://www.bing.com/news/search?q=electric+vehicle+BYD+Tesla+NEV&format=RSS"
       max_age_days: 2
     - id: "bing-battery"
       name: "Bing新闻-电池与储能"
-      url: "https://www.bing.com/news/search?q=%E5%9B%BA%E6%80%81%E7%94%B5%E6%B1%A0+%E5%8A%A8%E5%8A%9B%E7%94%B5%E6%B1%A0+%E5%82%A8%E8%83%BD&format=RSS&mkt=zh-cn"
+      url: "https://www.bing.com/news/search?q=solid+state+battery+energy+storage+CATL&format=RSS"
       max_age_days: 2
     - id: "bing-ai"
       name: "Bing新闻-AI大方向"
-      url: "https://www.bing.com/news/search?q=%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD+%E5%A4%A7%E6%A8%A1%E5%9E%8B&format=RSS&mkt=zh-cn"
+      url: "https://www.bing.com/news/search?q=artificial+intelligence+LLM+Nvidia+DeepSeek&format=RSS"
       max_age_days: 2
     - id: "bing-finance"
-      name: "Bing新闻-宏观与财经"
-      url: "https://www.bing.com/news/search?q=%E5%AE%8F%E8%A7%82%E7%BB%8F%E6%B5%8E+%E7%BE%8E%E8%81%94%E5%82%A8+A%E8%82%A1&format=RSS&mkt=zh-cn"
+      name: "Bing新闻-宏观财经"
+      url: "https://www.bing.com/news/search?q=Federal+Reserve+economy+stock+market&format=RSS"
       max_age_days: 2
 
     # ==========================================
-    # 2. 官方直连权威商业/科技源
+    # 2. 官方直连权威源 (极速稳定)
     # ==========================================
     - id: "yahoo-finance"
       name: "Yahoo Finance"
       url: "https://finance.yahoo.com/news/rssindex"
       max_age_days: 2
-    - id: "techcrunch"
-      name: "TechCrunch"
-      url: "http://feeds.feedburner.com/TechCrunch"
-      max_age_days: 2
     - id: "36kr"
       name: "36氪"
       url: "https://36kr.com/feed"
       max_age_days: 2
+    - id: "hacker-news"
+      name: "Hacker News"
+      url: "https://hnrss.org/frontpage"
+      max_age_days: 2
 
     # ==========================================
-    # 3. 备用高可用 RSSHub 节点
+    # 3. 权威财经与汽车官媒 (RSSHub 稳定节点)
     # ==========================================
     - id: "wallstreetcn"
       name: "华尔街见闻"
-      url: "https://rsshub.111566.xyz/wallstreetcn/news/global"
+      url: "https://rsshub.rssforever.com/wallstreetcn/news/global"
       max_age_days: 2
     - id: "cls-telegraph"
       name: "财联社-电报"
-      url: "https://rsshub.111566.xyz/cls/telegraph"
+      url: "https://rsshub.rssforever.com/cls/telegraph"
+      max_age_days: 2
+    - id: "yicai"
+      name: "第一财经"
+      url: "https://rsshub.rssforever.com/yicai/latest"
+      max_age_days: 2
+    - id: "jiemian-energy"
+      name: "界面新闻-新能源"
+      url: "https://rsshub.rssforever.com/jiemian/lists/84"
       max_age_days: 2
     - id: "autohome"
       name: "汽车之家-行业"
-      url: "https://rsshub.111566.xyz/autohome/news/all"
+      url: "https://rsshub.rssforever.com/autohome/news/all"
       max_age_days: 2
 
 report:
