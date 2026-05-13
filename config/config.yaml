@@ -3,7 +3,7 @@ app:
   show_version_update: true
 
 schedule:
-  enabled: false                        # ⚠️ 保持关闭，强制使用全天汇总(Daily)
+  enabled: false
 
 platforms:
   enabled: true
@@ -26,60 +26,48 @@ platforms:
       name: "财联社热门"
     - id: "cls-telegraph"
       name: "财联社电报"
-    - id: "xueqiu"
-      name: "雪球"
-    - id: "hackernews"
-      name: "Hacker News"
 
 rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 1
+    max_age_days: 2  # 全局默认：只看24小时内的新闻
   feeds:
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    # 🎯 独家：直达车企官网 (官方新闻稿/财报/政策第一手)
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    - id: "tesla-official"
-      name: "官网-特斯拉"
-      url: "https://ir.tesla.com/rss/news-releases.xml"
+    # --- 🎯 新增：央视与官媒直达 ---
+    - id: "cctv-news"
+      name: "央视与官媒"
+      url: "https://www.bing.com/news/search?q=site:news.cctv.com+OR+site:xinhuanet.com+OR+site:people.com.cn&format=RSS"
+
+    # --- 🎯 车企官网 (特批放宽至 10 天) ---
+    - id: "tesla-news"
+      name: "特斯拉动态"
+      url: "https://finance.yahoo.com/rss/headline?s=TSLA"
+      max_age_days: 10
     - id: "nio-official"
       name: "官网-蔚来"
       url: "https://ir.nio.com/rss/news-releases.xml"
+      max_age_days: 10
     - id: "lixiang-official"
       name: "官网-理想"
       url: "https://ir.lixiang.com/rss/news-releases.xml"
+      max_age_days: 10
     - id: "xpeng-official"
       name: "官网-小鹏"
       url: "https://ir.xiaopeng.com/rss/news-releases.xml"
+      max_age_days: 10
 
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    # 🎯 独家：直达政府官网 (只看国家部委的官方通告)
-    # 利用 site: 语法，强制只抓取财政部、发改委、工信部官网的新闻
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    - id: "gov-official"
-      name: "官网-国家部委汽车政策"
-      url: "https://www.bing.com/news/search?q=(site:mof.gov.cn+OR+site:ndrc.gov.cn+OR+site:miit.gov.cn)+汽车+补贴+以旧换新&format=RSS"
-
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    # 🎯 补充：全网车贷与金融政策追踪
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # --- 🎯 车贷、财政与友商政策源 ---
     - id: "bing-car-loan"
-      name: "全网-车贷与金融"
-      url: "https://www.bing.com/news/search?q=汽车+车贷+免息+零首付+金融政策&format=RSS"
-
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    # 🎯 原有关注源 (保持你之前的关注方向)
-    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    - id: "bing-ev"
-      name: "Bing新闻-新能源与车企"
-      url: "https://www.bing.com/news/search?q=electric+vehicle+BYD+Tesla+NEV&format=RSS"
-    - id: "bing-ai"
-      name: "Bing新闻-AI大方向"
-      url: "https://www.bing.com/news/search?q=artificial+intelligence+LLM+Nvidia+DeepSeek&format=RSS"
-    - id: "36kr"
-      name: "36氪"
-      url: "https://36kr.com/feed"
+      name: "Bing-车贷与金融"
+      url: "https://www.bing.com/news/search?q=汽车金融+OR+车贷+OR+车企免息&format=RSS"
+    - id: "bing-gov-subsidy"
+      name: "Bing-政府汽车补贴"
+      url: "https://www.bing.com/news/search?q=汽车+财政+补贴+以旧换新+购置税&format=RSS"
+    - id: "bing-ev-policy"
+      name: "Bing-车企政策与降价"
+      url: "https://www.bing.com/news/search?q=新能源车+降价+免息+权益+优惠&format=RSS"
+    
+    # --- 🎯 原有财经源 ---
     - id: "wallstreetcn"
       name: "华尔街见闻"
       url: "https://rsshub.rssforever.com/wallstreetcn/news/global"
@@ -88,14 +76,14 @@ rss:
       url: "https://rsshub.rssforever.com/cls/telegraph"
 
 report:
-  mode: "daily"                       # ⚠️ 锁定为全天汇总模式
-  display_mode: "keyword"             # ⚠️ 锁定为关键词模式
+  mode: "daily"
+  display_mode: "keyword"
   sort_by_position_first: true
   rank_threshold: 5
   max_news_per_keyword: 0
 
 filter:
-  method: "keyword"                   # ⚠️ 锁定为词库匹配模式
+  method: "keyword"
   priority_sort_enabled: true
 
 ai_filter:
@@ -110,51 +98,20 @@ ai_filter:
 display:
   region_order:
     - ai_analysis
-    - new_items
     - hotlist
     - rss
-    - standalone
   regions:
     new_items: false
     hotlist: true
     rss: true
     standalone: false
     ai_analysis: true
-  standalone:
-    platforms: ["zhihu", "wallstreetcn-hot"]
-    rss_feeds: []
-    max_items: 20
 
 notification:
   enabled: true
   channels:
     bark:
       url: ""
-    feishu:
-      webhook_url: ""
-    dingtalk:
-      webhook_url: ""
-    wework:
-      webhook_url: ""
-      msg_type: "markdown"
-    telegram:
-      bot_token: ""
-      chat_id: ""
-    email:
-      from: ""
-      password: ""
-      to: ""
-      smtp_server: ""
-      smtp_port: ""
-    ntfy:
-      server_url: "https://ntfy.sh"
-      topic: ""
-      token: ""
-    slack:
-      webhook_url: ""
-    generic_webhook:
-      webhook_url: ""
-      payload_template: ""
 
 storage:
   backend: "auto"
@@ -165,26 +122,14 @@ storage:
   local:
     data_dir: "output"
     retention_days: 0
-  remote:
-    retention_days: 0
-    endpoint_url: ""
-    bucket_name: ""
-    access_key_id: ""
-    secret_access_key: ""
-    region: ""
-  pull:
-    enabled: false
-    days: 7
 
 ai:
-  model: "openai/Qwen/Qwen2.5-7B-Instruct"    # ⚠️ 保持你的模型完全不变
+  model: "openai/Qwen/Qwen2.5-7B-Instruct"
   api_key: ""
   api_base: "https://api.siliconflow.cn/v1"
   timeout: 120
   temperature: 1.0
   max_tokens: 5000
-  num_retries: 1
-  fallback_models: []
 
 ai_analysis:
   enabled: true
@@ -192,43 +137,8 @@ ai_analysis:
   prompt_file: "ai_analysis_prompt.txt"
   mode: "follow_report"
   max_news_for_analysis: 150
-  include_rss: true                 # ⚠️ 已开启：让 AI 也能分析到新增的车企官网动态
+  include_rss: true
   include_standalone: true
-  include_rank_timeline: true
 
 ai_translation:
-  enabled: true
-  language: "中文"
-  prompt_file: "ai_translation_prompt.txt"
-  scope:
-    hotlist: false
-    rss: true
-    standalone: true
-
-advanced:
-  debug: false
-  version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version"
-  mcp_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_mcp"
-  configs_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_configs"
-  crawler:
-    request_interval: 2000
-    use_proxy: false
-    default_proxy: "http://127.0.0.1:10801"
-  rss:
-    request_interval: 1000
-    timeout: 15
-    use_proxy: false
-    proxy_url: ""
-  weight:
-    rank: 0.6
-    frequency: 0.3
-    hotness: 0.1
-  max_accounts_per_channel: 3
-  batch_size:
-    default: 4000
-    dingtalk: 20000
-    feishu: 30000
-    bark: 4000
-    slack: 4000
-  batch_send_interval: 3
-  feishu_message_separator: "━━━━━━━━━━━━━━━━"
+  enabled: false
