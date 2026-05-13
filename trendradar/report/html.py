@@ -28,25 +28,7 @@ def render_html_content(
     ai_analysis: Optional[Any] = None,
     show_new_section: bool = True,
 ) -> str:
-    """渲染HTML内容
-
-    Args:
-        report_data: 报告数据字典，包含 stats, new_titles, failed_ids, total_new_count
-        total_titles: 新闻总数
-        mode: 报告模式 ("daily", "current", "incremental")
-        update_info: 更新信息（可选）
-        region_order: 区域显示顺序列表
-        get_time_func: 获取当前时间的函数（可选，默认使用 datetime.now）
-        rss_items: RSS 统计条目列表（可选）
-        rss_new_items: RSS 新增条目列表（可选）
-        display_mode: 显示模式 ("keyword"=按关键词分组, "platform"=按平台分组)
-        standalone_data: 独立展示区数据（可选），包含 platforms 和 rss_feeds
-        ai_analysis: AI 分析结果对象（可选），AIAnalysisResult 实例
-        show_new_section: 是否显示新增热点区域
-
-    Returns:
-        渲染后的 HTML 字符串
-    """
+    """渲染HTML内容"""
     # 默认区域顺序
     default_region_order = ["hotlist", "rss", "new_items", "standalone", "ai_analysis"]
     if region_order is None:
