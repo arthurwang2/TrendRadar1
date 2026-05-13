@@ -31,18 +31,40 @@ rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 2  # 全局默认：只看24小时内的新闻
+    max_age_days: 1
   feeds:
-    # --- 🎯 新增：央视与官媒直达 ---
+    # --- 🎯 央视与官媒直达 ---
     - id: "cctv-news"
       name: "央视与官媒"
       url: "https://www.bing.com/news/search?q=site:news.cctv.com+OR+site:xinhuanet.com+OR+site:people.com.cn&format=RSS"
 
-    # --- 🎯 车企官网 (特批放宽至 10 天) ---
-    - id: "tesla-news"
-      name: "特斯拉动态"
+    # --- 🎯 雅虎财经直达：中美车企精准追踪 (放宽至10天) ---
+    - id: "yahoo-tesla"
+      name: "Yahoo-特斯拉"
       url: "https://finance.yahoo.com/rss/headline?s=TSLA"
       max_age_days: 10
+    - id: "yahoo-nio"
+      name: "Yahoo-蔚来"
+      url: "https://finance.yahoo.com/rss/headline?s=NIO"
+      max_age_days: 10
+    - id: "yahoo-xpeng"
+      name: "Yahoo-小鹏"
+      url: "https://finance.yahoo.com/rss/headline?s=XPEV"
+      max_age_days: 10
+    - id: "yahoo-liauto"
+      name: "Yahoo-理想"
+      url: "https://finance.yahoo.com/rss/headline?s=LI"
+      max_age_days: 10
+    - id: "yahoo-byd"
+      name: "Yahoo-比亚迪"
+      url: "https://finance.yahoo.com/rss/headline?s=BYDDY"
+      max_age_days: 10
+    - id: "yahoo-zeekr"
+      name: "Yahoo-极氪"
+      url: "https://finance.yahoo.com/rss/headline?s=ZK"
+      max_age_days: 10
+
+    # --- 🎯 车企官网通告 (放宽至10天) ---
     - id: "nio-official"
       name: "官网-蔚来"
       url: "https://ir.nio.com/rss/news-releases.xml"
@@ -141,4 +163,38 @@ ai_analysis:
   include_standalone: true
 
 ai_translation:
-  enabled: false
+  enabled: true
+  language: "中文"
+  prompt_file: "ai_translation_prompt.txt"
+  scope:
+    hotlist: true
+    rss: true
+    standalone: true
+
+advanced:
+  debug: false
+  version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version"
+  mcp_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_mcp"
+  configs_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_configs"
+  crawler:
+    request_interval: 2000
+    use_proxy: false
+    default_proxy: "http://127.0.0.1:10801"
+  rss:
+    request_interval: 1000
+    timeout: 15
+    use_proxy: false
+    proxy_url: ""
+  weight:
+    rank: 0.6
+    frequency: 0.3
+    hotness: 0.1
+  max_accounts_per_channel: 3
+  batch_size:
+    default: 4000
+    dingtalk: 20000
+    feishu: 30000
+    bark: 4000
+    slack: 4000
+  batch_send_interval: 3
+  feishu_message_separator: "━━━━━━━━━━━━━━━━"
