@@ -1,20 +1,13 @@
-# ═══════════════════════════════════════════════════════════════
-#                    TrendRadar 配置文件
-#                      Version: 2.2.0
-# ═══════════════════════════════════════════════════════════════
-
 app:
   timezone: "Asia/Shanghai"
   show_version_update: true
 
 schedule:
-  enabled: true
-  preset: "morning_evening"
+  enabled: false                        # ⚠️ 保持关闭，强制使用全天汇总(Daily)
 
 platforms:
   enabled: true
   sources:
-    # === 权威官媒与综合新闻 ===
     - id: "thepaper"
       name: "澎湃新闻"
     - id: "cankaoxiaoxi"
@@ -27,8 +20,6 @@ platforms:
       name: "今日头条"
     - id: "tencent-hot"
       name: "腾讯新闻"
-
-    # === 顶级财经与投资 ===
     - id: "wallstreetcn-hot"
       name: "华尔街见闻"
     - id: "cls-hot"
@@ -37,8 +28,6 @@ platforms:
       name: "财联社电报"
     - id: "xueqiu"
       name: "雪球"
-
-    # === 极客与前沿科技 ===
     - id: "hackernews"
       name: "Hacker News"
 
@@ -47,63 +36,66 @@ rss:
   freshness_filter:
     enabled: true
     max_age_days: 1
-
   feeds:
-    # === 1. Bing 官方英文关键词源 (稳定不报错) ===
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 🎯 独家：直达车企官网 (官方新闻稿/财报/政策第一手)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - id: "tesla-official"
+      name: "官网-特斯拉"
+      url: "https://ir.tesla.com/rss/news-releases.xml"
+    - id: "nio-official"
+      name: "官网-蔚来"
+      url: "https://ir.nio.com/rss/news-releases.xml"
+    - id: "lixiang-official"
+      name: "官网-理想"
+      url: "https://ir.lixiang.com/rss/news-releases.xml"
+    - id: "xpeng-official"
+      name: "官网-小鹏"
+      url: "https://ir.xiaopeng.com/rss/news-releases.xml"
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 🎯 独家：直达政府官网 (只看国家部委的官方通告)
+    # 利用 site: 语法，强制只抓取财政部、发改委、工信部官网的新闻
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - id: "gov-official"
+      name: "官网-国家部委汽车政策"
+      url: "https://www.bing.com/news/search?q=(site:mof.gov.cn+OR+site:ndrc.gov.cn+OR+site:miit.gov.cn)+汽车+补贴+以旧换新&format=RSS"
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 🎯 补充：全网车贷与金融政策追踪
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    - id: "bing-car-loan"
+      name: "全网-车贷与金融"
+      url: "https://www.bing.com/news/search?q=汽车+车贷+免息+零首付+金融政策&format=RSS"
+
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    # 🎯 原有关注源 (保持你之前的关注方向)
+    # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     - id: "bing-ev"
       name: "Bing新闻-新能源与车企"
       url: "https://www.bing.com/news/search?q=electric+vehicle+BYD+Tesla+NEV&format=RSS"
-      max_age_days: 2
-    - id: "bing-battery"
-      name: "Bing新闻-电池与储能"
-      url: "https://www.bing.com/news/search?q=solid+state+battery+energy+storage+CATL&format=RSS"
-      max_age_days: 2
     - id: "bing-ai"
       name: "Bing新闻-AI大方向"
       url: "https://www.bing.com/news/search?q=artificial+intelligence+LLM+Nvidia+DeepSeek&format=RSS"
-      max_age_days: 2
-    - id: "bing-finance"
-      name: "Bing新闻-宏观财经"
-      url: "https://www.bing.com/news/search?q=Federal+Reserve+economy+stock+market&format=RSS"
-      max_age_days: 2
-
-    # === 2. 官方直连权威源 ===
-    - id: "yahoo-finance"
-      name: "Yahoo Finance"
-      url: "https://finance.yahoo.com/news/rssindex"
-      max_age_days: 2
-    - id: "techcrunch"
-      name: "TechCrunch"
-      url: "http://feeds.feedburner.com/TechCrunch"
-      max_age_days: 2
     - id: "36kr"
       name: "36氪"
       url: "https://36kr.com/feed"
-      max_age_days: 2
-
-    # === 3. RSSHub 镜像源 ===
     - id: "wallstreetcn"
       name: "华尔街见闻"
       url: "https://rsshub.rssforever.com/wallstreetcn/news/global"
-      max_age_days: 2
     - id: "cls-telegraph-rss"
       name: "财联社-电报"
       url: "https://rsshub.rssforever.com/cls/telegraph"
-      max_age_days: 2
-    - id: "autohome"
-      name: "汽车之家-行业"
-      url: "https://rsshub.rssforever.com/autohome/news/all"
-      max_age_days: 2
 
 report:
-  mode: "daily"
-  display_mode: "keyword"
-  sort_by_position_first: false
+  mode: "daily"                       # ⚠️ 锁定为全天汇总模式
+  display_mode: "keyword"             # ⚠️ 锁定为关键词模式
+  sort_by_position_first: true
   rank_threshold: 5
   max_news_per_keyword: 0
 
 filter:
-  method: "keyword"                   # ⚠️ 已修改：必须用 keyword 模式，你的 frequency_words.txt 才会生效！
+  method: "keyword"                   # ⚠️ 锁定为词库匹配模式
   priority_sort_enabled: true
 
 ai_filter:
@@ -136,6 +128,8 @@ display:
 notification:
   enabled: true
   channels:
+    bark:
+      url: ""
     feishu:
       webhook_url: ""
     dingtalk:
@@ -156,8 +150,6 @@ notification:
       server_url: "https://ntfy.sh"
       topic: ""
       token: ""
-    bark:
-      url: ""
     slack:
       webhook_url: ""
     generic_webhook:
@@ -185,9 +177,9 @@ storage:
     days: 7
 
 ai:
-  model: "openai/Qwen/Qwen2.5-7B-Instruct"    # ⚠️ 已修改：恢复为你之前成功跑通的模型
+  model: "openai/Qwen/Qwen2.5-7B-Instruct"    # ⚠️ 保持你的模型完全不变
   api_key: ""
-  api_base: "https://api.siliconflow.cn/v1"   # ⚠️ 已修改：恢复为硅基流动的接口
+  api_base: "https://api.siliconflow.cn/v1"
   timeout: 120
   temperature: 1.0
   max_tokens: 5000
@@ -200,7 +192,7 @@ ai_analysis:
   prompt_file: "ai_analysis_prompt.txt"
   mode: "follow_report"
   max_news_for_analysis: 150
-  include_rss: false
+  include_rss: true                 # ⚠️ 已开启：让 AI 也能分析到新增的车企官网动态
   include_standalone: true
   include_rank_timeline: true
 
