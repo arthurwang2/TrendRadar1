@@ -26,51 +26,37 @@ platforms:
       name: "财联社热门"
     - id: "cls-telegraph"
       name: "财联社电报"
-    - id: "weibo"          # 🎯 已按照原作者规范新增：微博原生平台
+    - id: "weibo"
       name: "微博"
 
 rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 2
+    max_age_days: 1
   feeds:
-    # --- 🎯 央视、人民日报等权威官媒 ---
+    # 🎯 权威官媒与政务
     - id: "official-media"
       name: "权威官媒"
       url: "https://www.bing.com/news/search?q=site:news.cctv.com+OR+site:people.com.cn+OR+site:xinhuanet.com&format=RSS"
-
-    # --- 🎯 上海商务与经信委动态 ---
     - id: "shanghai-gov"
       name: "上海政务"
       url: "https://www.bing.com/news/search?q=%22上海市商务委员会%22+OR+%22上海市经济和信息化委员会%22+OR+%22上海商务%22+OR+%22上海经信委%22&format=RSS"
+    
+    # 🎯 替换掉枯燥的财报，改为精准抓取车企的“公关/产品”大动作
+    - id: "ev-pr-news"
+      name: "车企产品与公关动态"
+      url: "https://www.bing.com/news/search?q=(蔚来+OR+小鹏+OR+理想汽车+OR+比亚迪+OR+特斯拉)+(发布+OR+上市+OR+降价+OR+回应)&format=RSS"
 
-    # --- 🎯 车企官网通告 (放宽至10天) ---
-    - id: "nio-official"
-      name: "官网-蔚来"
-      url: "https://ir.nio.com/rss/news-releases.xml"
-      max_age_days: 5
-    - id: "lixiang-official"
-      name: "官网-理想"
-      url: "https://ir.lixiang.com/rss/news-releases.xml"
-      max_age_days: 5
-    - id: "xpeng-official"
-      name: "官网-小鹏"
-      url: "https://ir.xiaopeng.com/rss/news-releases.xml"
-      max_age_days: 5
-
-    # --- 🎯 车贷、财政与友商政策源 ---
+    # 🎯 政策与金融
     - id: "bing-car-loan"
       name: "Bing-车贷与金融"
       url: "https://www.bing.com/news/search?q=汽车金融+OR+车贷+OR+车企免息&format=RSS"
     - id: "bing-gov-subsidy"
       name: "Bing-政府汽车补贴"
       url: "https://www.bing.com/news/search?q=汽车+财政+补贴+以旧换新+购置税&format=RSS"
-    - id: "bing-ev-policy"
-      name: "Bing-车企政策与降价"
-      url: "https://www.bing.com/news/search?q=新能源车+降价+免息+权益+优惠&format=RSS"
     
-    # --- 🎯 原有财经源 ---
+    # 🎯 财经底座
     - id: "wallstreetcn"
       name: "华尔街见闻"
       url: "https://rsshub.rssforever.com/wallstreetcn/news/global"
@@ -83,10 +69,10 @@ report:
   display_mode: "keyword"
   sort_by_position_first: true
   rank_threshold: 5
-  max_news_per_keyword: 0
+  max_news_per_keyword: 3     # ⚠️ 核心修复：同一个话题最多只显示3条，彻底干掉重复刷屏！
 
 filter:
-  method: "keyword"
+  method: "ai"
   priority_sort_enabled: true
 
 ai_filter:
@@ -103,12 +89,17 @@ display:
     - ai_analysis
     - hotlist
     - rss
+    - standalone              # ⚠️ 将独立展示区排在最下面
   regions:
     new_items: false
     hotlist: true
     rss: true
-    standalone: false
+    standalone: true          # ⚠️ 开启独立展示区功能
     ai_analysis: true
+  standalone:
+    platforms: ["weibo"]      # ⚠️ 核心修复：把微博强行放在这里，不经过任何AI过滤，原汁原味展示！
+    rss_feeds: []
+    max_items: 15             # 微博热搜最多显示前15条
 
 notification:
   enabled: true
@@ -141,7 +132,7 @@ ai_analysis:
   mode: "follow_report"
   max_news_for_analysis: 150
   include_rss: true
-  include_standalone: true
+  include_standalone: false   # 微博八卦不参与AI产业分析
 
 ai_translation:
   enabled: true
