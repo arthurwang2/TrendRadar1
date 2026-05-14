@@ -48,47 +48,37 @@ rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 1
+    max_age_days: 2   # ⚠️ 放宽到2天，确保周末发布的重磅政策不被漏掉
   feeds:
-    # --- 🎯 权威官媒与地方政务 (原生直连，信息量大且稳定) ---
+    # --- 🎯 权威官媒 (利用谷歌新闻引擎，永不被拦截) ---
+    - id: "gov-media"
+      name: "权威官媒"
+      url: "https://news.google.com/rss/search?q=site:news.cctv.com+OR+site:people.com.cn+OR+site:xinhuanet.com&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
+      
+    # --- 🎯 上海政务与产业政策 ---
     - id: "shanghai-gov"
-      name: "上海市政府"
-      url: "https://rsshub.rssforever.com/gov/shanghai/rsj/zxxw"
-    - id: "shanghai-sheitc"
-      name: "上海经信委"
-      url: "https://rsshub.rssforever.com/gov/shanghai/sheitc/zxgkxx"
-    - id: "xinhua-news"
-      name: "新华网要闻"
-      url: "https://rsshub.rssforever.com/xinhua/news/yw"
-    - id: "cctv-news"
-      name: "央视新闻"
-      url: "https://rsshub.rssforever.com/cctv/news/china"
+      name: "上海政务"
+      url: "https://news.google.com/rss/search?q=上海市商务委员会+OR+上海市经济和信息化委员会+OR+上海市政府&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
 
-    # --- 🎯 汽车与科技前沿 (垂直媒体，新车/降价/公关动态极多) ---
-    - id: "ithome-auto"
-      name: "IT之家-汽车"
-      url: "https://rsshub.rssforever.com/ithome/it/auto"
-    - id: "36kr-auto"
-      name: "36氪-汽车"
-      url: "https://rsshub.rssforever.com/36kr/motif/32768675840"
-    - id: "qbitai"
-      name: "量子位-AI"
-      url: "https://rsshub.rssforever.com/qbitai/category/资讯"
+    # --- 🎯 国内车企官方动态 (精准定向追踪：降价、金融、权益、新车) ---
+    - id: "ev-official-pr"
+      name: "车企官方动态"
+      url: "https://news.google.com/rss/search?q=(蔚来+OR+小鹏+OR+理想汽车+OR+比亚迪+OR+极氪+OR+特斯拉)+(降价+OR+免息+OR+零首付+OR+权益+OR+上市+OR+发布)&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
 
-    # --- 🎯 车贷与宏观金融 (7x24小时全天候滚动) ---
-    - id: "sina-finance"
-      name: "新浪财经"
-      url: "https://rsshub.rssforever.com/sina/finance/roll"
+    # --- 🎯 宏观汽车金融与补贴政策 ---
+    - id: "car-finance-policy"
+      name: "车贷与补贴政策"
+      url: "https://news.google.com/rss/search?q=汽车金融+OR+车贷+OR+汽车以旧换新+OR+汽车消费券+OR+新能源补贴&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
 
 report:
   mode: "daily"
   display_mode: "keyword"
   sort_by_position_first: true
   rank_threshold: 5
-  max_news_per_keyword: 2     # ⚠️ 同一个话题最多只留 2 条，拒绝同质化刷屏
+  max_news_per_keyword: 3     # ⚠️ 放宽到3条，确保同一政策的多维度解读都能展示
 
 filter:
-  method: "keyword"           # ⚠️ 换回最稳定精准的关键词模式
+  method: "keyword"           # ⚠️ 保持关键词模式，配合上面的精准 RSS 源，效果无敌
   priority_sort_enabled: true
 
 display:
@@ -100,7 +90,7 @@ display:
     new_items: false
     hotlist: true
     rss: true
-    standalone: false         # ⚠️ 关闭独立展示区，彻底干掉微博八卦
+    standalone: false         # ⚠️ 彻底关闭独立展示区，干掉微博娱乐八卦
     ai_analysis: true
 
 notification:
