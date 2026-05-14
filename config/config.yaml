@@ -26,57 +26,38 @@ platforms:
       name: "财联社热门"
     - id: "cls-telegraph"
       name: "财联社电报"
+    - id: "weibo"          # 🎯 已按照原作者规范新增：微博原生平台
+      name: "微博"
 
 rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 1
+    max_age_days: 2
   feeds:
-    # --- 🎯 央视与官媒直达 ---
-    - id: "cctv-news"
-      name: "央视与官媒"
-      url: "https://www.bing.com/news/search?q=site:news.cctv.com+OR+site:xinhuanet.com+OR+site:people.com.cn&format=RSS"
+    # --- 🎯 央视、人民日报等权威官媒 ---
+    - id: "official-media"
+      name: "权威官媒"
+      url: "https://www.bing.com/news/search?q=site:news.cctv.com+OR+site:people.com.cn+OR+site:xinhuanet.com&format=RSS"
 
-    # --- 🎯 雅虎财经直达：中美车企精准追踪 (放宽至10天) ---
-    - id: "yahoo-tesla"
-      name: "Yahoo-特斯拉"
-      url: "https://finance.yahoo.com/rss/headline?s=TSLA"
-      max_age_days: 10
-    - id: "yahoo-nio"
-      name: "Yahoo-蔚来"
-      url: "https://finance.yahoo.com/rss/headline?s=NIO"
-      max_age_days: 10
-    - id: "yahoo-xpeng"
-      name: "Yahoo-小鹏"
-      url: "https://finance.yahoo.com/rss/headline?s=XPEV"
-      max_age_days: 10
-    - id: "yahoo-liauto"
-      name: "Yahoo-理想"
-      url: "https://finance.yahoo.com/rss/headline?s=LI"
-      max_age_days: 10
-    - id: "yahoo-byd"
-      name: "Yahoo-比亚迪"
-      url: "https://finance.yahoo.com/rss/headline?s=BYDDY"
-      max_age_days: 10
-    - id: "yahoo-zeekr"
-      name: "Yahoo-极氪"
-      url: "https://finance.yahoo.com/rss/headline?s=ZK"
-      max_age_days: 10
+    # --- 🎯 上海商务与经信委动态 ---
+    - id: "shanghai-gov"
+      name: "上海政务"
+      url: "https://www.bing.com/news/search?q=%22上海市商务委员会%22+OR+%22上海市经济和信息化委员会%22+OR+%22上海商务%22+OR+%22上海经信委%22&format=RSS"
 
     # --- 🎯 车企官网通告 (放宽至10天) ---
     - id: "nio-official"
       name: "官网-蔚来"
       url: "https://ir.nio.com/rss/news-releases.xml"
-      max_age_days: 10
+      max_age_days: 5
     - id: "lixiang-official"
       name: "官网-理想"
       url: "https://ir.lixiang.com/rss/news-releases.xml"
-      max_age_days: 10
+      max_age_days: 5
     - id: "xpeng-official"
       name: "官网-小鹏"
       url: "https://ir.xiaopeng.com/rss/news-releases.xml"
-      max_age_days: 10
+      max_age_days: 5
 
     # --- 🎯 车贷、财政与友商政策源 ---
     - id: "bing-car-loan"
