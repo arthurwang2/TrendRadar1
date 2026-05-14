@@ -50,21 +50,35 @@ rss:
     enabled: true
     max_age_days: 1
   feeds:
-    - id: "official-media"
-      name: "权威官媒"
-      url: "https://www.bing.com/news/search?q=site:news.cctv.com+OR+site:people.com.cn+OR+site:xinhuanet.com&format=RSS"
+    # --- 🎯 权威官媒与地方政务 (原生直连，信息量大且稳定) ---
     - id: "shanghai-gov"
-      name: "上海政务"
-      url: "https://www.bing.com/news/search?q=%22上海市商务委员会%22+OR+%22上海市经济和信息化委员会%22+OR+%22上海商务%22+OR+%22上海经信委%22&format=RSS"
-    - id: "ev-pr-news"
-      name: "车企产品与公关动态"
-      url: "https://www.bing.com/news/search?q=(蔚来+OR+小鹏+OR+理想汽车+OR+比亚迪+OR+特斯拉)+(发布+OR+上市+OR+降价+OR+回应)&format=RSS"
-    - id: "bing-car-loan"
-      name: "Bing-车贷与金融"
-      url: "https://www.bing.com/news/search?q=汽车金融+OR+车贷+OR+车企免息&format=RSS"
-    - id: "bing-gov-subsidy"
-      name: "Bing-政府汽车补贴"
-      url: "https://www.bing.com/news/search?q=汽车+财政+补贴+以旧换新+购置税&format=RSS"
+      name: "上海市政府"
+      url: "https://rsshub.rssforever.com/gov/shanghai/rsj/zxxw"
+    - id: "shanghai-sheitc"
+      name: "上海经信委"
+      url: "https://rsshub.rssforever.com/gov/shanghai/sheitc/zxgkxx"
+    - id: "xinhua-news"
+      name: "新华网要闻"
+      url: "https://rsshub.rssforever.com/xinhua/news/yw"
+    - id: "cctv-news"
+      name: "央视新闻"
+      url: "https://rsshub.rssforever.com/cctv/news/china"
+
+    # --- 🎯 汽车与科技前沿 (垂直媒体，新车/降价/公关动态极多) ---
+    - id: "ithome-auto"
+      name: "IT之家-汽车"
+      url: "https://rsshub.rssforever.com/ithome/it/auto"
+    - id: "36kr-auto"
+      name: "36氪-汽车"
+      url: "https://rsshub.rssforever.com/36kr/motif/32768675840"
+    - id: "qbitai"
+      name: "量子位-AI"
+      url: "https://rsshub.rssforever.com/qbitai/category/资讯"
+
+    # --- 🎯 车贷与宏观金融 (7x24小时全天候滚动) ---
+    - id: "sina-finance"
+      name: "新浪财经"
+      url: "https://rsshub.rssforever.com/sina/finance/roll"
 
 report:
   mode: "daily"
