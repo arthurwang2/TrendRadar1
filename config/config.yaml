@@ -8,98 +8,86 @@ schedule:
 platforms:
   enabled: true
   sources:
+    # === 综合新闻媒体类 ===
+    - id: "toutiao"
+      name: "今日头条"
+    - id: "baidu"
+      name: "百度热搜"
     - id: "thepaper"
       name: "澎湃新闻"
+    - id: "ifeng"
+      name: "凤凰网"
     - id: "cankaoxiaoxi"
       name: "参考消息"
     - id: "zaobao"
       name: "联合早报"
-    - id: "ifeng"
-      name: "凤凰网"
-    - id: "toutiao"
-      name: "今日头条"
     - id: "tencent-hot"
       name: "腾讯新闻"
+    # === 财经投资类 ===
     - id: "wallstreetcn-hot"
       name: "华尔街见闻"
     - id: "cls-hot"
       name: "财联社热门"
     - id: "cls-telegraph"
       name: "财联社电报"
+    - id: "xueqiu"
+      name: "雪球"
+    # === 社交/短视频/科技类 ===
     - id: "weibo"
       name: "微博"
+    - id: "zhihu"
+      name: "知乎"
+    - id: "bilibili-hot-search"
+      name: "B站"
+    - id: "ithome"
+      name: "IT之家"
+    - id: "36kr"
+      name: "36氪"
 
 rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 2
+    max_age_days: 1
   feeds:
-    # 🎯 权威官媒与政务
     - id: "official-media"
       name: "权威官媒"
       url: "https://www.bing.com/news/search?q=site:news.cctv.com+OR+site:people.com.cn+OR+site:xinhuanet.com&format=RSS"
     - id: "shanghai-gov"
       name: "上海政务"
       url: "https://www.bing.com/news/search?q=%22上海市商务委员会%22+OR+%22上海市经济和信息化委员会%22+OR+%22上海商务%22+OR+%22上海经信委%22&format=RSS"
-    
-    # 🎯 替换掉枯燥的财报，改为精准抓取车企的“公关/产品”大动作
     - id: "ev-pr-news"
       name: "车企产品与公关动态"
       url: "https://www.bing.com/news/search?q=(蔚来+OR+小鹏+OR+理想汽车+OR+比亚迪+OR+特斯拉)+(发布+OR+上市+OR+降价+OR+回应)&format=RSS"
-
-    # 🎯 政策与金融
     - id: "bing-car-loan"
       name: "Bing-车贷与金融"
       url: "https://www.bing.com/news/search?q=汽车金融+OR+车贷+OR+车企免息&format=RSS"
     - id: "bing-gov-subsidy"
       name: "Bing-政府汽车补贴"
       url: "https://www.bing.com/news/search?q=汽车+财政+补贴+以旧换新+购置税&format=RSS"
-    
-    # 🎯 财经底座
-    - id: "wallstreetcn"
-      name: "华尔街见闻"
-      url: "https://rsshub.rssforever.com/wallstreetcn/news/global"
-    - id: "cls-telegraph-rss"
-      name: "财联社-电报"
-      url: "https://rsshub.rssforever.com/cls/telegraph"
 
 report:
   mode: "daily"
   display_mode: "keyword"
   sort_by_position_first: true
   rank_threshold: 5
-  max_news_per_keyword: 3     # ⚠️ 核心修复：同一个话题最多只显示3条，彻底干掉重复刷屏！
+  max_news_per_keyword: 2     # ⚠️ 同一个话题最多只留 2 条，拒绝同质化刷屏
 
 filter:
-  method: "ai"
+  method: "keyword"           # ⚠️ 换回最稳定精准的关键词模式
   priority_sort_enabled: true
-
-ai_filter:
-  batch_size: 200
-  batch_interval: 2
-  min_score: 0.7
-  reclassify_threshold: 0.6
-  prompt_file: "prompt.txt"
-  extract_prompt_file: "extract_prompt.txt"
-  update_tags_prompt_file: "update_tags_prompt.txt"
 
 display:
   region_order:
     - ai_analysis
     - hotlist
     - rss
-    - standalone              # ⚠️ 将独立展示区排在最下面
   regions:
     new_items: false
     hotlist: true
     rss: true
-    standalone: true          # ⚠️ 开启独立展示区功能
+    standalone: false         # ⚠️ 关闭独立展示区，彻底干掉微博八卦
     ai_analysis: true
-  standalone:
-    platforms: ["weibo"]      # ⚠️ 核心修复：把微博强行放在这里，不经过任何AI过滤，原汁原味展示！
-    rss_feeds: []
-    max_items: 15             # 微博热搜最多显示前15条
 
 notification:
   enabled: true
@@ -132,7 +120,7 @@ ai_analysis:
   mode: "follow_report"
   max_news_for_analysis: 150
   include_rss: true
-  include_standalone: true   # 微博八卦不参与AI产业分析
+  include_standalone: false
 
 ai_translation:
   enabled: true
@@ -141,7 +129,7 @@ ai_translation:
   scope:
     hotlist: true
     rss: true
-    standalone: true
+    standalone: false
 
 advanced:
   debug: false
