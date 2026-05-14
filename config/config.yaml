@@ -33,7 +33,7 @@ rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 1
+    max_age_days: 2
   feeds:
     # 🎯 权威官媒与政务
     - id: "official-media"
@@ -132,7 +132,7 @@ ai_analysis:
   mode: "follow_report"
   max_news_for_analysis: 150
   include_rss: true
-  include_standalone: false   # 微博八卦不参与AI产业分析
+  include_standalone: true   # 微博八卦不参与AI产业分析
 
 ai_translation:
   enabled: true
