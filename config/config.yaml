@@ -8,22 +8,12 @@ schedule:
 platforms:
   enabled: true
   sources:
-    # === 综合新闻媒体类 ===
-    - id: "toutiao"
-      name: "今日头条"
-    - id: "baidu"
-      name: "百度热搜"
     - id: "thepaper"
       name: "澎湃新闻"
-    - id: "ifeng"
-      name: "凤凰网"
     - id: "cankaoxiaoxi"
       name: "参考消息"
     - id: "zaobao"
       name: "联合早报"
-    - id: "tencent-hot"
-      name: "腾讯新闻"
-    # === 财经投资类 ===
     - id: "wallstreetcn-hot"
       name: "华尔街见闻"
     - id: "cls-hot"
@@ -32,13 +22,6 @@ platforms:
       name: "财联社电报"
     - id: "xueqiu"
       name: "雪球"
-    # === 社交/短视频/科技类 ===
-    - id: "weibo"
-      name: "微博"
-    - id: "zhihu"
-      name: "知乎"
-    - id: "bilibili-hot-search"
-      name: "B站"
     - id: "ithome"
       name: "IT之家"
     - id: "36kr"
@@ -48,50 +31,49 @@ rss:
   enabled: true
   freshness_filter:
     enabled: true
-    max_age_days: 2   # ⚠️ 放宽到2天，确保周末发布的重磅政策不被漏掉
+    max_age_days: 2
   feeds:
-    # --- 🎯 权威官媒 (利用谷歌新闻引擎，永不被拦截) ---
-    - id: "gov-media"
-      name: "权威官媒"
-      url: "https://news.google.com/rss/search?q=site:news.cctv.com+OR+site:people.com.cn+OR+site:xinhuanet.com&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
-      
-    # --- 🎯 上海政务与产业政策 ---
-    - id: "shanghai-gov"
-      name: "上海政务"
-      url: "https://news.google.com/rss/search?q=上海市商务委员会+OR+上海市经济和信息化委员会+OR+上海市政府&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
-
-    # --- 🎯 国内车企官方动态 (精准定向追踪：降价、金融、权益、新车) ---
-    - id: "ev-official-pr"
-      name: "车企官方动态"
-      url: "https://news.google.com/rss/search?q=(蔚来+OR+小鹏+OR+理想汽车+OR+比亚迪+OR+极氪+OR+特斯拉)+(降价+OR+免息+OR+零首付+OR+权益+OR+上市+OR+发布)&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
-
-    # --- 🎯 宏观汽车金融与补贴政策 ---
-    - id: "car-finance-policy"
-      name: "车贷与补贴政策"
-      url: "https://news.google.com/rss/search?q=汽车金融+OR+车贷+OR+汽车以旧换新+OR+汽车消费券+OR+新能源补贴&hl=zh-CN&gl=CN&ceid=CN:zh-Hans"
+    # 填入你指定的高质量官方源
+    - id: "people-daily"
+      name: "人民日报"
+      url: "http://rss.people.com.cn/rss/people.xml"
+    - id: "people-domestic"
+      name: "人民网-国内新闻"
+      url: "http://www.people.com.cn/rss/GB/59476/1.xml"
+    - id: "xinhua-yw"
+      name: "新华网-要闻"
+      url: "http://www.xinhuanet.com/rss/news.xml"
+    - id: "cctv-yw"
+      name: "央视新闻-要闻"
+      url: "https://news.cctv.com/rss/1_1.xml"
+    - id: "xinhua-world"
+      name: "新华网-国际新闻"
+      url: "http://www.xinhuanet.com/rss/world.xml"
+    - id: "people-politics"
+      name: "人民网-时政"
+      url: "http://www.people.com.cn/rss/GB/59476/2.xml"
 
 report:
   mode: "daily"
   display_mode: "keyword"
   sort_by_position_first: true
   rank_threshold: 5
-  max_news_per_keyword: 3     # ⚠️ 放宽到3条，确保同一政策的多维度解读都能展示
+  max_news_per_keyword: 10 # 既然是做本地分析的数据源，放宽抓取数量
 
 filter:
-  method: "keyword"           # ⚠️ 保持关键词模式，配合上面的精准 RSS 源，效果无敌
+  method: "keyword"
   priority_sort_enabled: true
 
 display:
   region_order:
-    - ai_analysis
     - hotlist
     - rss
   regions:
     new_items: false
     hotlist: true
     rss: true
-    standalone: false         # ⚠️ 彻底关闭独立展示区，干掉微博娱乐八卦
-    ai_analysis: true
+    standalone: false
+    ai_analysis: false      # 彻底关闭网页端的 AI 分析模块
 
 notification:
   enabled: true
@@ -105,6 +87,7 @@ storage:
     sqlite: true
     txt: false
     html: true
+    json: true              # 必须开启：生成 JSON 文件供你本地分析
   local:
     data_dir: "output"
     retention_days: 0
@@ -118,37 +101,21 @@ ai:
   max_tokens: 5000
 
 ai_analysis:
-  enabled: true
-  language: "Chinese"
-  prompt_file: "ai_analysis_prompt.txt"
-  mode: "follow_report"
-  max_news_for_analysis: 150
-  include_rss: true
-  include_standalone: false
+  enabled: false            # 彻底关闭系统自带的 AI 请求
 
 ai_translation:
-  enabled: true
-  language: "中文"
-  prompt_file: "ai_translation_prompt.txt"
-  scope:
-    hotlist: true
-    rss: true
-    standalone: false
+  enabled: false            # 彻底关闭翻译
 
 advanced:
   debug: false
   version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version"
-  mcp_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_mcp"
-  configs_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_configs"
   crawler:
     request_interval: 2000
     use_proxy: false
-    default_proxy: "http://127.0.0.1:10801"
   rss:
     request_interval: 1000
     timeout: 15
     use_proxy: false
-    proxy_url: ""
   weight:
     rank: 0.6
     frequency: 0.3
@@ -156,9 +123,5 @@ advanced:
   max_accounts_per_channel: 3
   batch_size:
     default: 4000
-    dingtalk: 20000
-    feishu: 30000
     bark: 4000
-    slack: 4000
   batch_send_interval: 3
-  feishu_message_separator: "━━━━━━━━━━━━━━━━"
