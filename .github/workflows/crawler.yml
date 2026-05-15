@@ -142,13 +142,13 @@ jobs:
           # 只保留当天的数据
           filtered_items = []
           for item in all_items:
-              item_time = str(item.get('time', ''))
-              # 匹配日期字符串
+              # 使用 created_at 或 updated_at 字段匹配日期
+              item_time = str(item.get('created_at', item.get('updated_at', '')))
               if today_str in item_time:
                   filtered_items.append(item)
 
           # 按时间倒序排序
-          filtered_items.sort(key=lambda x: x.get('time', ''), reverse=True)
+          filtered_items.sort(key=lambda x: x.get('created_at', ''), reverse=True)
 
           # 导出到 output 根目录
           json_path = os.path.join(output_dir, "trendradar_full_content.json")
