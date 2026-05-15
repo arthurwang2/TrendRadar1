@@ -76,6 +76,82 @@ jobs:
           GITHUB_ACTIONS: true
         run: uv run python -m trendradar
 
+      - name: Convert DB to JSON with Full Content
+        run: |
+          python3 <<EOF
+          import os, sqlite3, json
+          from datetime import datetime
+
+          def extract_table(db_path, table_name):
+              if not os.path.exists(db_path): return []
+              try:
+                  conn = sqlite3.connect(db_path)
+                  cur = conn.cursor()
+                  # 检查表是否存在
+                  cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'")
+                  if not cur.fetchone():
+                      conn.close()
+                      return []
+                  
+                  cur.execute(f"SELECT * FROM {table_name}")
+                  cols = [d[0] for d in cur.description]
+                  rows = cur.fetchall()
+                  conn.close()
+                  
+                  items = []
+                  for r in rows:
+                      item = dict(zip(cols, r))
+                      # 过滤掉无效数据
+                      if not item.get('title') or not item.get('url'):
+                          continue
+                      
+                      # 重点：提取正文
+                      # TrendRadar 通常将正文存储在 'content' 或 'description' 字段
+                      # 如果 'content' 字段存在且不为空，优先使用它
+                      content = item.get('content', '')
+                      if not content or len(content) < 50:
+                          content = item.get('description', '')
+                      
+                      # 将提取到的内容存入 full_content 字段
+                      item['full_content'] = content
+                      items.append(item)
+                  return items
+              except Exception as e:
+                  print(f"Error processing {db_path}: {e}")
+                  return []
+
+          output_dir = "output"
+          news_dir = os.path.join(output_dir, "news")
+          rss_dir = os.path.join(output_dir, "rss")
+          all_items = []
+
+          print("Extracting news items...")
+          if os.path.exists(news_dir):
+              for f in os.listdir(news_dir):
+                  if f.endswith(".db"):
+                      all_items.extend(extract_table(os.path.join(news_dir, f), "news_items"))
+
+          print("Extracting RSS items...")
+          if os.path.exists(rss_dir):
+              for f in os.listdir(rss_dir):
+                  if f.endswith(".db"):
+                      all_items.extend(extract_table(os.path.join(rss_dir, f), "rss_items"))
+
+          # 按时间倒序排序
+          all_items.sort(key=lambda x: x.get('time', ''), reverse=True)
+
+          # 导出到 output 根目录
+          json_path = os.path.join(output_dir, "trendradar_full_content.json")
+          with open(json_path, 'w', encoding='utf-8') as f:
+              json.dump(all_items, f, ensure_ascii=False, indent=4)
+          
+          print(f"SUCCESS: Exported {len(all_items)} items with content to {json_path}")
+          # 打印第一条数据的内容长度，方便验证是否抓取到正文
+          if all_items:
+              content_len = len(all_items[0].get('full_content', ''))
+              print(f"Sample content length: {content_len} characters")
+          EOF
+
       - name: Upload Output Data (JSON for local use)
         uses: actions/upload-artifact@v4
         with:
