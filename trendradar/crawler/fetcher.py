@@ -1,184 +1,345 @@
 # coding=utf-8
 """
-数据获取器模块
+RSS 解析器
 
-负责从 NewsNow API 抓取新闻数据，支持：
-- 单个平台数据获取
-- 批量平台数据爬取
-- 自动重试机制
-- 代理支持
+支持 RSS 2.0、Atom 和 JSON Feed 1.1 格式的解析
 """
 
+import re
+import html
 import json
-import random
-import time
-from typing import Dict, List, Tuple, Optional, Union
+from dataclasses import dataclass
+from datetime import datetime
+from typing import List, Optional, Dict, Any
+from email.utils import parsedate_to_datetime
 
-import requests
+try:
+    import feedparser
+    HAS_FEEDPARSER = True
+except ImportError:
+    HAS_FEEDPARSER = False
+    feedparser = None
 
 
-class DataFetcher:
-    """数据获取器"""
+@dataclass
+class ParsedRSSItem:
+    """解析后的 RSS 条目"""
+    title: str
+    url: str
+    published_at: Optional[str] = None
+    summary: Optional[str] = None
+    author: Optional[str] = None
+    guid: Optional[str] = None
 
-    # 默认 API 地址
-    DEFAULT_API_URL = "https://newsnow.busiyi.world/api/s"
 
-    # 默认请求头
-    DEFAULT_HEADERS = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
-        "Connection": "keep-alive",
-        "Cache-Control": "no-cache",
-    }
+class RSSParser:
+    """RSS 解析器"""
 
-    def __init__(
-        self,
-        proxy_url: Optional[str] = None,
-        api_url: Optional[str] = None,
-    ):
+    def __init__(self, max_summary_length: int = 500):
         """
-        初始化数据获取器
+        初始化解析器
 
         Args:
-            proxy_url: 代理服务器 URL（可选）
-            api_url: API 基础 URL（可选，默认使用 DEFAULT_API_URL）
+            max_summary_length: 摘要最大长度
         """
-        self.proxy_url = proxy_url
-        self.api_url = api_url or self.DEFAULT_API_URL
+        if not HAS_FEEDPARSER:
+            raise ImportError("RSS 解析需要安装 feedparser: pip install feedparser")
 
-    def fetch_data(
-        self,
-        id_info: Union[str, Tuple[str, str]],
-        max_retries: int = 2,
-        min_retry_wait: int = 3,
-        max_retry_wait: int = 5,
-    ) -> Tuple[Optional[str], str, str]:
+        self.max_summary_length = max_summary_length
+
+    def parse(self, content: str, feed_url: str = "") -> List[ParsedRSSItem]:
         """
-        获取指定ID数据，支持重试
+        解析 RSS/Atom/JSON Feed 内容
 
         Args:
-            id_info: 平台ID 或 (平台ID, 别名) 元组
-            max_retries: 最大重试次数
-            min_retry_wait: 最小重试等待时间（秒）
-            max_retry_wait: 最大重试等待时间（秒）
+            content: Feed 内容（XML 或 JSON）
+            feed_url: Feed URL（用于错误提示）
 
         Returns:
-            (响应文本, 平台ID, 别名) 元组，失败时响应文本为 None
+            解析后的条目列表
         """
-        if isinstance(id_info, tuple):
-            id_value, alias = id_info
-        else:
-            id_value = id_info
-            alias = id_value
+        # 先尝试检测 JSON Feed
+        if self._is_json_feed(content):
+            return self._parse_json_feed(content, feed_url)
 
-        url = f"{self.api_url}?id={id_value}&latest"
+        # 使用 feedparser 解析 RSS/Atom
+        feed = feedparser.parse(content)
 
-        proxies = None
-        if self.proxy_url:
-            proxies = {"http": self.proxy_url, "https": self.proxy_url}
+        if feed.bozo and not feed.entries:
+            raise ValueError(f"RSS 解析失败 ({feed_url}): {feed.bozo_exception}")
 
-        retries = 0
-        while retries <= max_retries:
+        items = []
+        for entry in feed.entries:
+            item = self._parse_entry(entry)
+            if item:
+                items.append(item)
+
+        return items
+
+    def _is_json_feed(self, content: str) -> bool:
+        """
+        检测内容是否为 JSON Feed 格式
+
+        JSON Feed 必须包含 version 字段，值为 https://jsonfeed.org/version/1 或 1.1
+        """
+        content = content.strip()
+        if not content.startswith("{"):
+            return False
+
+        try:
+            data = json.loads(content)
+            version = data.get("version", "")
+            return "jsonfeed.org" in version
+        except (json.JSONDecodeError, TypeError):
+            return False
+
+    def _parse_json_feed(self, content: str, feed_url: str = "") -> List[ParsedRSSItem]:
+        """
+        解析 JSON Feed 1.1 格式
+
+        JSON Feed 规范: https://www.jsonfeed.org/version/1.1/
+
+        Args:
+            content: JSON Feed 内容
+            feed_url: Feed URL（用于错误提示）
+
+        Returns:
+            解析后的条目列表
+        """
+        try:
+            data = json.loads(content)
+        except json.JSONDecodeError as e:
+            raise ValueError(f"JSON Feed 解析失败 ({feed_url}): {e}")
+
+        items_data = data.get("items", [])
+        if not items_data:
+            return []
+
+        items = []
+        for item_data in items_data:
+            item = self._parse_json_feed_item(item_data)
+            if item:
+                items.append(item)
+
+        return items
+
+    def _parse_json_feed_item(self, item_data: Dict[str, Any]) -> Optional[ParsedRSSItem]:
+        """解析单个 JSON Feed 条目"""
+        url = item_data.get("url", "") or item_data.get("external_url", "")
+
+        title = item_data.get("title", "")
+        if not title:
+            content_text = item_data.get("content_text", "")
+            if content_text:
+                title = content_text[:20] + ("..." if len(content_text) > 20 else "")
+
+        title = self._clean_text(title)
+        if not title and url:
+            title = url
+        if not title:
+            return None
+
+        # 发布时间（ISO 8601 格式）
+        published_at = None
+        date_str = item_data.get("date_published") or item_data.get("date_modified")
+        if date_str:
+            published_at = self._parse_iso_date(date_str)
+
+        # 摘要：优先 summary，否则使用 content_text
+        summary = item_data.get("summary", "")
+        if not summary:
+            content_text = item_data.get("content_text", "")
+            content_html = item_data.get("content_html", "")
+            summary = content_text or self._clean_text(content_html)
+
+        if summary:
+            summary = self._clean_text(summary)
+            if len(summary) > self.max_summary_length:
+                summary = summary[:self.max_summary_length] + "..."
+
+        # 作者
+        author = None
+        authors = item_data.get("authors", [])
+        if authors:
+            names = [a.get("name", "") for a in authors if isinstance(a, dict) and a.get("name")]
+            if names:
+                author = ", ".join(names)
+
+        # GUID
+        guid = item_data.get("id", "") or url
+
+        return ParsedRSSItem(
+            title=title,
+            url=url,
+            published_at=published_at,
+            summary=summary or None,
+            author=author,
+            guid=guid,
+        )
+
+    def _parse_iso_date(self, date_str: str) -> Optional[str]:
+        """解析 ISO 8601 日期格式"""
+        if not date_str:
+            return None
+
+        try:
+            # 处理常见的 ISO 8601 格式
+            # 替换 Z 为 +00:00
+            date_str = date_str.replace("Z", "+00:00")
+            dt = datetime.fromisoformat(date_str)
+            return dt.isoformat()
+        except (ValueError, TypeError):
+            pass
+
+        return None
+
+    def parse_url(self, url: str, timeout: int = 10) -> List[ParsedRSSItem]:
+        """
+        从 URL 解析 RSS
+
+        Args:
+            url: RSS URL
+            timeout: 超时时间（秒）
+
+        Returns:
+            解析后的条目列表
+        """
+        import requests
+
+        response = requests.get(url, timeout=timeout, headers={
+            "User-Agent": "TrendRadar/2.0 RSS Reader"
+        })
+        response.raise_for_status()
+
+        return self.parse(response.text, url)
+
+    def _parse_entry(self, entry: Any) -> Optional[ParsedRSSItem]:
+        """解析单个条目"""
+        title = self._clean_text(entry.get("title", ""))
+
+        url = entry.get("link", "")
+        if not url:
+            links = entry.get("links", [])
+            for link in links:
+                if link.get("rel") == "alternate" or link.get("type", "").startswith("text/html"):
+                    url = link.get("href", "")
+                    break
+            if not url and links:
+                url = links[0].get("href", "")
+
+        if not title:
+            raw_summary = entry.get("summary") or entry.get("description", "")
+            if not raw_summary:
+                content = entry.get("content", [])
+                if content and isinstance(content, list):
+                    raw_summary = content[0].get("value", "")
+            if raw_summary:
+                title = self._clean_text(raw_summary)
+                if len(title) > 20:
+                    title = title[:20] + "..."
+            if not title and url:
+                title = url
+
+        if not title:
+            return None
+
+        published_at = self._parse_date(entry)
+        summary = self._parse_summary(entry)
+        author = self._parse_author(entry)
+        guid = entry.get("id") or entry.get("guid", {}).get("value") or url
+
+        return ParsedRSSItem(
+            title=title,
+            url=url,
+            published_at=published_at,
+            summary=summary,
+            author=author,
+            guid=guid,
+        )
+
+    def _clean_text(self, text: str) -> str:
+        """清理文本"""
+        if not text:
+            return ""
+
+        # 解码 HTML 实体
+        text = html.unescape(text)
+
+        # 移除 HTML 标签
+        text = re.sub(r'<[^>]+>', '', text)
+
+        # 移除多余空白
+        text = re.sub(r'\s+', ' ', text)
+
+        return text.strip()
+
+    def _parse_date(self, entry: Any) -> Optional[str]:
+        """解析发布日期"""
+        # feedparser 会自动解析日期到 published_parsed
+        date_struct = entry.get("published_parsed") or entry.get("updated_parsed")
+
+        if date_struct:
             try:
-                response = requests.get(
-                    url,
-                    proxies=proxies,
-                    headers=self.DEFAULT_HEADERS,
-                    timeout=10,
-                )
-                response.raise_for_status()
+                dt = datetime(*date_struct[:6])
+                return dt.isoformat()
+            except (ValueError, TypeError):
+                pass
 
-                data_text = response.text
-                data_json = json.loads(data_text)
+        # 尝试手动解析
+        date_str = entry.get("published") or entry.get("updated")
+        if date_str:
+            try:
+                dt = parsedate_to_datetime(date_str)
+                return dt.isoformat()
+            except (ValueError, TypeError):
+                pass
 
-                status = data_json.get("status", "未知")
-                if status not in ["success", "cache"]:
-                    raise ValueError(f"响应状态异常: {status}")
+            # 尝试 ISO 格式
+            try:
+                dt = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+                return dt.isoformat()
+            except (ValueError, TypeError):
+                pass
 
-                status_info = "最新数据" if status == "success" else "缓存数据"
-                print(f"获取 {id_value} 成功（{status_info}）")
-                return data_text, id_value, alias
+        return None
 
-            except Exception as e:
-                retries += 1
-                if retries <= max_retries:
-                    base_wait = random.uniform(min_retry_wait, max_retry_wait)
-                    additional_wait = (retries - 1) * random.uniform(1, 2)
-                    wait_time = base_wait + additional_wait
-                    print(f"请求 {id_value} 失败: {e}. {wait_time:.2f}秒后重试...")
-                    time.sleep(wait_time)
-                else:
-                    print(f"请求 {id_value} 失败: {e}")
-                    return None, id_value, alias
+    def _parse_summary(self, entry: Any) -> Optional[str]:
+        """解析摘要"""
+        summary = entry.get("summary") or entry.get("description", "")
 
-        return None, id_value, alias
+        if not summary:
+            # 尝试从 content 获取
+            content = entry.get("content", [])
+            if content and isinstance(content, list):
+                summary = content[0].get("value", "")
 
-    def crawl_websites(
-        self,
-        ids_list: List[Union[str, Tuple[str, str]]],
-        request_interval: int = 100,
-    ) -> Tuple[Dict, Dict, List]:
-        """
-        爬取多个网站数据
+        if not summary:
+            return None
 
-        Args:
-            ids_list: 平台ID列表，每个元素可以是字符串或 (平台ID, 别名) 元组
-            request_interval: 请求间隔（毫秒）
+        summary = self._clean_text(summary)
 
-        Returns:
-            (结果字典, ID到名称的映射, 失败ID列表) 元组
-        """
-        results = {}
-        id_to_name = {}
-        failed_ids = []
+        # 截断过长的摘要
+        if len(summary) > self.max_summary_length:
+            summary = summary[:self.max_summary_length] + "..."
 
-        for i, id_info in enumerate(ids_list):
-            if isinstance(id_info, tuple):
-                id_value, name = id_info
-            else:
-                id_value = id_info
-                name = id_value
+        return summary
 
-            id_to_name[id_value] = name
-            response, _, _ = self.fetch_data(id_info)
+    def _parse_author(self, entry: Any) -> Optional[str]:
+        """解析作者"""
+        author = entry.get("author")
+        if author:
+            return self._clean_text(author)
 
-            if response:
-                try:
-                    data = json.loads(response)
-                    results[id_value] = {}
+        # 尝试从 dc:creator 获取
+        author = entry.get("dc_creator")
+        if author:
+            return self._clean_text(author)
 
-                    for index, item in enumerate(data.get("items", []), 1):
-                        title = item.get("title")
-                        # 跳过无效标题（None、float、空字符串）
-                        if title is None or isinstance(title, float) or not str(title).strip():
-                            continue
-                        title = str(title).strip()
-                        url = item.get("url", "")
-                        mobile_url = item.get("mobileUrl", "")
+        # 尝试从 authors 列表获取
+        authors = entry.get("authors", [])
+        if authors:
+            names = [a.get("name", "") for a in authors if a.get("name")]
+            if names:
+                return ", ".join(names)
 
-                        if title in results[id_value]:
-                            results[id_value][title]["ranks"].append(index)
-                        else:
-                            results[id_value][title] = {
-                                "ranks": [index],
-                                "url": url,
-                                "mobileUrl": mobile_url,
-                            }
-                except json.JSONDecodeError:
-                    print(f"解析 {id_value} 响应失败")
-                    failed_ids.append(id_value)
-                except Exception as e:
-                    print(f"处理 {id_value} 数据出错: {e}")
-                    failed_ids.append(id_value)
-            else:
-                failed_ids.append(id_value)
-
-            # 请求间隔（除了最后一个）
-            if i < len(ids_list) - 1:
-                actual_interval = request_interval + random.randint(-10, 20)
-                actual_interval = max(50, actual_interval)
-                time.sleep(actual_interval / 1000)
-
-        print(f"成功: {list(results.keys())}, 失败: {failed_ids}")
-        return results, id_to_name, failed_ids
+        return None
